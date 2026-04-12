@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="auth-container">
+    <div class="card">
+        <h2 style="margin-top: 0; color: var(--primary);">Secure Login</h2>
+        <p style="color: var(--text-muted); margin-bottom: 2rem;">Please enter your credentials to access the portal.
+        </p>
+        <form method="POST">
+            <div class="form-group">
+                <label class="form-label" for="email">Email Address</label>
+                <input type="email" id="email" name="email" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="password">Password</label>
+                <input type="password" id="password" name="password" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="location">Department Location</label>
+                <input list="countryList" id="location" name="location" class="form-control" autocomplete="off" placeholder="Start typing country name..." required>
+                <datalist id="countryList">
+                    {% for country in countries %}
+                    <option value="{{ country }}"></option>
+                    {% endfor %}
+                </datalist>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Sign In</button>
+        </form>
+        <div style="margin-top: 1.5rem; text-align: center;">
+            <a href="{{ url_for('signup') }}"
+                style="color: var(--primary); text-decoration: none; font-size: 0.9rem;">New Employee Onboarding</a>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

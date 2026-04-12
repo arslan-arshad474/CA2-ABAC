@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+{% block content %}
+
+<head>
+    <meta http-equiv="refresh" content="10">
+</head>
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h2>Security Admin Dashboard</h2>
+    <span class="badge" style="background-color: var(--primary); color: white;">Monitoring Active...</span>
+</div>
+
+<div class="grid">
+    <div class="card" style="grid-column: 1 / -1;">
+        <h3 style="margin-top: 0; color: var(--danger);">Locked Users</h3>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Users locked out due to ABAC security rules (4+
+            failures).</p>
+        {% set locked_users = users|selectattr('is_locked')|list %}
+        {% if locked_users %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Failures</th>
+                    <th>Lockout Timestamp</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for lu in locked_users %}
+                <tr>
+                    <td style="font-weight: 500;">{{ lu.email }}</td>
+                    <td><span class="badge badge-danger">{{ lu.failed_attempts }}</span></td>
+                    <td>{{ lu.lockout_timestamp.strftime('%Y-%m-%d %H:%M:%S') if lu.lockout_timestamp else 'Unknown' }}
+                    </td>
+                    <td>
+                        <form action="{{ url_for('unlock_user', id=lu.id) }}" method="POST"
+                            onsubmit="var b = this.querySelector('button'); b.innerHTML='Unlocking...'; b.style.pointerEvents='none';">
+                            <button type="submit" class="btn btn-success"
+                                style="padding: 0.25rem 0.75rem; font-size: 0.875rem;">Release Lock</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p
+            style="text-align: center; color: var(--success); padding: 1rem; border: 1px dashed var(--success); border-radius: 6px;">
+            No locked users. System is clear.</p>
+        {% endif %}
+    </div>
+
+    <div class="card" style="grid-column: 1 / -1;">
+        <h3 style="margin-top: 0; color: var(--warning);">Pending Approvals</h3>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">New employees waiting for authorization to login.</p>
+        {% set unapproved_users = users|selectattr('is_approved', 'equalto', False)|list %}
+        {% if unapproved_users %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Department</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in unapproved_users %}
+                <tr>
+                    <td style="font-weight: 500;">{{ u.first_name }} {{ u.last_name }}</td>
+                    <td>{{ u.email }}</td>
+                    <td>{{ u.department }}</td>
+                    <td style="display: flex; gap: 0.5rem; align-items: center;">
+                        <a href="{{ url_for('view_employee', id=u.id) }}" class="btn btn-primary"
+                            style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">View Details</a>
+                        <form action="{{ url_for('approve_user', id=u.id) }}" method="POST"
+                            onsubmit="var b = this.querySelector('button'); b.innerHTML='Approving...'; b.style.pointerEvents='none';"
+                            style="margin: 0;">
+                            <button type="submit" class="btn btn-success"
+                                style="padding: 0.25rem 0.75rem; font-size: 0.875rem;">Approve Account</button>
+                        </form>
+                        <form action="{{ url_for('decline_user', id=u.id) }}" method="POST"
+                            onsubmit="if(!confirm('Are you sure you want to completely decline and delete this application?')) return false; var b = this.querySelector('button'); b.innerHTML='Declining...'; b.style.pointerEvents='none';"
+                            style="margin: 0;">
+                            <button type="submit" class="btn btn-danger"
+                                style="padding: 0.25rem 0.75rem; font-size: 0.875rem;">Decline</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p
+            style="text-align: center; color: var(--text-muted); padding: 1rem; border: 1px dashed #334155; border-radius: 6px;">
+            No pending approvals.</p>
+        {% endif %}
+    </div>
+
+    <div class="card" style="grid-column: 1 / -1; margin-bottom: 2rem;">
+        <h3 style="margin-top: 0; color: var(--success);">Active Employees</h3>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Authenticated and approved active employee roster.</p>
+        {% set active_users = users|selectattr('is_approved', 'equalto', True)|rejectattr('role', 'equalto',
+        'Admin')|list %}
+        {% if active_users %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Job Title</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in active_users %}
+                <tr>
+                    <td style="font-weight: 500;">{{ u.first_name }} {{ u.last_name }}</td>
+                    <td>{{ u.email }}</td>
+                    <td>{{ u.job_title }}</td>
+                    <td style="display: flex; gap: 0.5rem; align-items: center;">
+                        <a href="{{ url_for('view_employee', id=u.id) }}" class="btn btn-primary"
+                            style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">View Details</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p style="text-align: center; color: var(--text-muted); padding: 1rem;">No active employees found.</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card">
+    <h3 style="margin-top: 0; border-bottom: 1px solid #334155; padding-bottom: 0.5rem;">Global Activity Feed</h3>
+    <p style="color: var(--text-muted); font-size: 0.9rem;">Auto-refreshing every 10 seconds.</p>
+    {% if activities %}
+    <table style="margin-top: 1rem;">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Action</th>
+                <th>Location Trace</th>
+                <th>Device Code</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in activities %}
+            <tr>
+                <td style="font-weight: 500; font-size: 0.9rem;">{{ log.user.email }}</td>
+                <td
+                    style="{% if 'FAILED' in log.action or 'LOCKED OUT' in log.action or 'invalid' in log.action or 'IDENTIFIED' in log.action %} color: var(--danger);{% elif 'Warning' in log.action %}color: var(--warning);{% else %}color: var(--success);{% endif %} font-weight: 500; font-size: 0.9rem;">
+                    {{ log.action }}
+                </td>
+                <td style="font-size: 0.85rem;">{{ log.location }}</td>
+                <td
+                    style="font-size: 0.8rem; color: var(--text-muted); max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: wrap;">
+                    {{ log.device }}
+                </td>
+                <td style="font-size: 0.85rem; color: var(--text-muted);">{{ log.timestamp.strftime('%Y-%m-%d %H:%M:%S')
+                    }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="color: var(--text-muted);">No activity logs found.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h2>Employee Dossier: {{ emp.first_name }} {{ emp.last_name }} {% if not emp.is_approved %}<span class="badge badge-warning">PENDING APPROVAL</span>{% endif %}</h2>
+    <div style="display: flex; gap: 1rem; align-items: center;">
+        {% if not emp.is_approved %}
+        <form action="{{ url_for('approve_user', id=emp.id) }}" method="POST" onsubmit="var b = this.querySelector('button'); b.innerHTML='Approving...'; b.style.pointerEvents='none';" style="margin: 0;">
+            <button type="submit" class="btn btn-success" style="padding: 0.5rem 1rem;">Approve Account</button>
+        </form>
+        <form action="{{ url_for('decline_user', id=emp.id) }}" method="POST" onsubmit="var b = this.querySelector('button'); b.innerHTML='Declining...'; b.style.pointerEvents='none';" style="margin: 0;">
+            <button type="submit" class="btn btn-danger" style="padding: 0.5rem 1rem;">Decline</button>
+        </form>
+        {% else %}
+        <form action="{{ url_for('force_logout', id=emp.id) }}" method="POST" onsubmit="var b = this.querySelector('button'); b.innerHTML='Logging out...'; b.style.pointerEvents='none';" style="margin: 0;">
+            <button type="submit" class="btn btn-warning" style="padding: 0.5rem 1rem;">Force Logout Connection</button>
+        </form>
+        {% endif %}
+    </div>
+</div>
+
+<div class="grid">
+    <div class="card">
+        <h3 style="margin-top: 0; color: var(--primary);">Personal Details</h3>
+        <ul style="list-style: none; padding: 0; margin: 0; color: var(--text-muted); line-height: 2;">
+            <li><strong style="margin-right: 0.5rem; color: var(--text);">Email:</strong> {{ emp.email }}</li>
+            <li><strong style="margin-right: 0.5rem; color: var(--text);">Mobile:</strong> {{ emp.mobile }}</li>
+            <li><strong style="margin-right: 0.5rem; color: var(--text);">Hired Location:</strong> {{ emp.location }}</li>
+            <li><strong style="margin-right: 0.5rem; color: var(--text);">Lockout Status:</strong> 
+                {% if emp.is_locked %}
+                <span class="badge badge-danger">LOCKED</span>
+                {% else %}
+                <span class="badge badge-success">Clear</span>
+                {% endif %}
+            </li>
+        </ul>
+    </div>
+    
+    <div class="card">
+        <h3 style="margin-top: 0; color: var(--primary);">Corporate Allocation</h3>
+        <ul style="list-style: none; padding: 0; margin: 0; color: var(--text-muted); line-height: 2;">
+            <li><strong style="margin-right: 0.5rem; color: var(--text);">Department:</strong> {{ emp.department }}</li>
+            <li><strong style="margin-right: 0.5rem; color: var(--text);">Job Title:</strong> {{ emp.job_title }}</li>
+            <li><strong style="margin-right: 0.5rem; color: var(--text);">Access Level:</strong> {{ emp.access_required }}</li>
+            <li><strong style="margin-right: 0.5rem; color: var(--text);">Payroll Cycle:</strong> {{ emp.payroll }}</li>
+        </ul>
+    </div>
+</div>
+
+<div class="card" style="margin-top: 2rem;">
+    <h3 style="margin-top: 0; border-bottom: 1px solid #334155; padding-bottom: 0.5rem;">Localized Activity Feed</h3>
+    {% if activities %}
+    <table style="margin-top: 1rem;">
+        <thead>
+            <tr>
+                <th>Action Event</th>
+                <th>Location Trace</th>
+                <th>Device Code</th>
+                <th>Validation Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in activities %}
+            <tr>
+                <td style="{% if 'Failed' in log.action or 'Locked' in log.action or 'invalid' in log.action.lower() %}color: var(--danger);{% elif 'Warning' in log.action %}color: var(--warning);{% else %}color: var(--success);{% endif %} font-weight: 500; font-size: 0.9rem;">
+                    {{ log.action }}
+                </td>
+                <td style="font-size: 0.85rem;">{{ log.location }}</td>
+                <td style="font-size: 0.8rem; color: var(--text-muted); max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                    {{ log.device }}
+                </td>
+                <td style="font-size: 0.85rem; color: var(--text-muted);">{{ log.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="color: var(--text-muted);">No activity data exists for this user.</p>
+    {% endif %}
+</div>
+{% endblock %}

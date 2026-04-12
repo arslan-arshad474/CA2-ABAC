@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h2>Employee Portal</h2>
+    <span class="badge" style="background-color: var(--primary); color: white;">Welcome, {{ user.first_name }} ({{ user.job_title }})</span>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        alert("Welcome to the Employee Portal, {{ user.first_name }}!");
+        
+        // Background polling for security status
+        setInterval(function() {
+            fetch('/api/status')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.logout_required) {
+                        window.location.href = '/logout';
+                    }
+                })
+                .catch(err => console.log('Status monitor check failed'));
+        }, 10000);
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="auth-container" style="max-width: 600px;">
+    <div class="card">
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <h2 style="margin-top: 0; color: var(--primary);">Employee Onboarding</h2>
+            <p style="color: var(--text-muted);">Register a new employee for portal access.</p>
+        </div>
+        
+        <form method="POST">
+            <div class="grid">
+                <div class="form-group">
+                    <label class="form-label" for="first_name">First Name</label>
+                    <input type="text" id="first_name" name="first_name" class="form-control" placeholder="John" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="last_name">Last Name</label>
+                    <input type="text" id="last_name" name="last_name" class="form-control" placeholder="Doe" required>
+                </div>
+            </div>
+
+            <div class="grid">
+                <div class="form-group">
+                    <label class="form-label" for="email">Email Address</label>
+                    <input type="email" id="email" name="email" class="form-control" placeholder="john.doe@nexajobs.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="mobile">Mobile Number</label>
+                    <input type="tel" id="mobile" name="mobile" class="form-control" placeholder="+1234567890" required>
+                </div>
+            </div>
+
+            <div class="grid">
+                <div class="form-group">
+                    <label class="form-label" for="department">Department</label>
+                    <input type="text" id="department" name="department" class="form-control" placeholder="e.g. Engineering" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="location">Location Hired For</label>
+                    <input list="countryList" id="location" name="location" class="form-control" autocomplete="off" placeholder="Start typing country..." required>
+                    <datalist id="countryList">
+                        {% for country in countries %}
+                        <option value="{{ country }}"></option>
+                        {% endfor %}
+                    </datalist>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="access_required">Access Required</label>
+                <select id="access_required" name="access_required" class="form-control" required style="padding: 0.75rem; border: 1px solid #ccc; border-radius: 6px; width: 100%;">
+                    <option value="" disabled selected>Select Access Level</option>
+                    <option value="IT Manager">IT Manager</option>
+                    <option value="Security Admin">Security Admin</option>
+                    <option value="Team Admin">Team Admin</option>
+                </select>
+            </div>
+
+            <div class="grid">
+                <div class="form-group">
+                    <label class="form-label" for="job_title">Job Title</label>
+                    <select id="job_title" name="job_title" class="form-control" required style="padding: 0.75rem; border: 1px solid #ccc; border-radius: 6px; width: 100%;">
+                        <option value="" disabled selected>Select Job Title</option>
+                        <option value="Manager">Manager</option>
+                        <option value="Director">Director</option>
+                        <option value="Analyst">Analyst</option>
+                        <option value="Engineer">Engineer</option>
+                        <option value="Specialist">Specialist</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="payroll">Payroll Frequency</label>
+                    <select id="payroll" name="payroll" class="form-control" required style="padding: 0.75rem; border: 1px solid #ccc; border-radius: 6px; width: 100%;">
+                        <option value="" disabled selected>Select Schedule</option>
+                        <option value="Hourly">Hourly</option>
+                        <option value="Weekly">Weekly</option>
+                        <option value="Monthly">Monthly</option>
+                    </select>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Complete Onboarding</button>
+            <div style="margin-top: 1.5rem; text-align: center;">
+                <p style="color: var(--text-muted); font-size: 0.9rem;">The system will automatically generate a temporary password.</p>
+                <a href="{{ url_for('login') }}" style="color: var(--primary); text-decoration: none; font-size: 0.9rem;">Already have an account? Login here</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

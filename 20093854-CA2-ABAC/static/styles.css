@@ -1,0 +1,155 @@
+/* JobPortal/static/styles.css - Simplified Basic Theme */
+
+:root {
+    --primary: #0056b3;
+    --primary-hover: #004085;
+    --bg: #f9f9f9;
+    --surface: #ffffff;
+    --surface-hover: #e2e8f0;
+    --text: #333333;
+    --text-muted: #666666;
+    --danger: #dc3545;
+    --success: #28a745;
+    --warning: #ffc107;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    color: #333333;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.navbar {
+    background-color: #ffffff;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #ccc;
+}
+
+.navbar-brand {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #0056b3;
+    text-decoration: none;
+}
+
+.navbar-nav a {
+    color: #0056b3;
+    text-decoration: none;
+    margin-left: 15px;
+}
+
+.navbar-nav a:hover {
+    text-decoration: underline;
+}
+
+.container {
+    flex: 1;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Basic Borders instead of Glassmorphism Cards */
+.card {
+    background: #ffffff;
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.alert {
+    padding: 10px;
+    border: 1px solid;
+    margin-bottom: 15px;
+}
+.alert-danger { background-color: #f8d7da; color: #721c24; border-color: #f5c6cb; }
+.alert-success { background-color: #d4edda; color: #155724; border-color: #c3e6cb; }
+.alert-warning { background-color: #fff3cd; color: #856404; border-color: #ffeeba; }
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-control {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    background-color: #ffffff;
+    color: #000000;
+    box-sizing: border-box;
+}
+
+.btn {
+    display: inline-block;
+    padding: 8px 15px;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    text-decoration: none;
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+.btn-primary {
+    background-color: #0056b3;
+    color: white;
+    border-color: #004085;
+}
+
+.btn-danger { background-color: #dc3545; color: white; border-color: #bd2130;}
+.btn-success { background-color: #28a745; color: white; border-color: #1e7e34;}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #ccc;
+}
+
+th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+}
+
+.badge {
+    padding: 3px 8px;
+    border: 1px solid #ccc;
+    font-size: 0.8rem;
+    background-color: #eee;
+    color: #000;
+}
+.badge-danger { background-color: #dc3545; color: white; border: none;}
+.badge-success { background-color: #28a745; color: white; border: none;}
+.badge-warning { background-color: #ffc107; color: black; border: none;}
+
+.auth-container {
+    max-width: 400px;
+    margin: 40px auto;
+}
