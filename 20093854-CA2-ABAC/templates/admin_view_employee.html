@@ -61,7 +61,7 @@
         <tbody>
             {% for log in activities %}
             <tr>
-                <td style="{% if 'Failed' in log.action or 'Locked' in log.action or 'invalid' in log.action.lower() %}color: var(--danger);{% elif 'Warning' in log.action %}color: var(--warning);{% else %}color: var(--success);{% endif %} font-weight: 500; font-size: 0.9rem;">
+                <td style="{% if 'FAILED' in log.action or 'LOCKED OUT' in log.action or 'invalid' in log.action or 'IDENTIFIED' in log.action %}color: var(--danger);{% elif 'Warning' in log.action %}color: var(--warning);{% else %}color: var(--success);{% endif %} font-weight: 500; font-size: 0.9rem;">
                     {{ log.action }}
                 </td>
                 <td style="font-size: 0.85rem;">{{ log.location }}</td>
